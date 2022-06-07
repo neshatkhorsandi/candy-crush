@@ -125,6 +125,14 @@ const App = () => {
   // move our squares down
   const moveSquareDown = () => {
     for (let i = 0; i < 64 - width; i++) {
+      const firstRow = [0, 1, 2, 3, 4, 5, 6, 7];
+      const isFirstRow = firstRow.includes(i);
+
+      // if first row and its empty then generate a new random color
+      if (isFirstRow && currentColorArrangement[i] === '') {
+        let randomNum = Math.floor(Math.random() * colors.length);
+        currentColorArrangement[i] = colors[randomNum];
+      }
       // if the one were looping over is blank,
       // then we are getting the one were looping over and moving it down
       if (currentColorArrangement[i + width] === '') {
