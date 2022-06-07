@@ -5,10 +5,38 @@ import './index.css';
 const App = () => {
   // states
   const [currentColorArrangement, setCurrentColorArrangement] = useState([]);
+  const [squareDragged, setSquareDragged] = useState(null);
+  const [squareReplaced, setSquareReplaced] = useState(null);
 
   // constants
   const width = 8;
   const colors = ['blue', 'green', 'orange', 'purple', 'red', 'yellow'];
+
+  const dragStart = (e) => {
+    console.log('this is drag start', e.target);
+    setSquareDragged(e.target);
+  };
+
+  const dragDrop = (e) => {
+    console.log('this is drag drop', e.target);
+    setSquareReplaced(e.target);
+  };
+
+  const dragEnd = () => {
+    console.log('this is drag end');
+    // get the id of the square being dragged
+    const draggedSquareId = parseInt(squareDragged.getAttribute('data-id'));
+
+    // get the id of the square being replaced
+    const replacedSquareId = parseInt(squareReplaced.getAttribute('data-id'));
+
+    // whatever square is being replaced, we want to find it in array
+    // and change to whatever one that its being replaced with
+    currentColorArrangement[replacedSquareId] =
+      squareDragged.style.backgroundColor;
+    currentColorArrangement[draggedSquareId] =
+      squareReplaced.style.backgroundColor;
+  };
 
   // creating initial board
   const createBoard = () => {
@@ -48,7 +76,7 @@ const App = () => {
   // checking for columns of four
   const checkForColumnOfFour = () => {
     // 47 is the 3 last box before the end
-    for (let i = 0; i < 39; i++) {
+    for (let i = 0; i <= 39; i++) {
       const colOfFour = [i, i + width, i + width * 2, i + width * 3];
 
       // the color that we are gonna check in our column
@@ -124,7 +152,7 @@ const App = () => {
 
   // move our squares down
   const moveSquareDown = () => {
-    for (let i = 0; i < 64 - width; i++) {
+    for (let i = 0; i <= 55; i++) {
       const firstRow = [0, 1, 2, 3, 4, 5, 6, 7];
       const isFirstRow = firstRow.includes(i);
 
@@ -172,7 +200,7 @@ const App = () => {
     moveSquareDown,
   ]);
 
-  console.log(currentColorArrangement);
+  // console.log(currentColorArrangement);
   return (
     <div className='app'>
       <div className='game'>
@@ -182,6 +210,14 @@ const App = () => {
             key={index}
             style={{ backgroundColor: color }}
             alt={color}
+            data-id={index}
+            draggable={true}
+            onDragOver={(e) => e.preventDefault()}
+            onDragEnter={(e) => e.preventDefault()}
+            onDragLeave={(e) => e.preventDefault()}
+            onDrop={(e) => dragDrop(e)}
+            onDragEnd={(e) => dragEnd(e)}
+            onDragStart={(e) => dragStart(e)}
           />
         ))}
       </div>
