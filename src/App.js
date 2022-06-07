@@ -1,9 +1,12 @@
+// imports
 import React, { useState, useEffect } from 'react';
 import './index.css';
 
 const App = () => {
+  // states
   const [currentColorArrangement, setCurrentColorArrangement] = useState([]);
 
+  // constants
   const width = 8;
   const colors = ['blue', 'green', 'orange', 'purple', 'red', 'yellow'];
 
@@ -119,6 +122,18 @@ const App = () => {
     }
   };
 
+  // move our squares down
+  const moveSquareDown = () => {
+    for (let i = 0; i < 64 - width; i++) {
+      // if the one were looping over is blank,
+      // then we are getting the one were looping over and moving it down
+      if (currentColorArrangement[i + width] === '') {
+        currentColorArrangement[i + width] = currentColorArrangement[i];
+        currentColorArrangement[i] = '';
+      }
+    }
+  };
+
   // creating board after initial render
   useEffect(() => {
     createBoard();
@@ -133,6 +148,7 @@ const App = () => {
       checkForColumnOfThree();
       checkForRowOfFour();
       checkForRowOfThree();
+      moveSquareDown();
 
       // change current color arrangement and reset it
       setCurrentColorArrangement([...currentColorArrangement]);
@@ -145,6 +161,7 @@ const App = () => {
     checkForColumnOfFour,
     checkForRowOfThree,
     checkForRowOfFour,
+    moveSquareDown,
   ]);
 
   console.log(currentColorArrangement);
